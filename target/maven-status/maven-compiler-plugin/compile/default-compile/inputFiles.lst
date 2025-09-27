@@ -1,0 +1,15 @@
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/BlueprintsAPIApplication.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/controllers/BlueprintAPIController.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/controllers/ResourceNotFoundException.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/filters/BlueprintFilter.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/filters/impl/RedundancyFilter.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/filters/impl/SubsamplingFilter.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/model/Blueprint.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/model/Point.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/persistence/BlueprintNotFoundException.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/persistence/BlueprintPersistenceException.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/persistence/BlueprintsPersistence.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/persistence/impl/BlueprintServicesImpl.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/persistence/impl/InMemoryBlueprintPersistence.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/persistence/impl/Tuple.java
+/home/daviespr/JS_Blueprint/src/main/java/edu/eci/arsw/blueprints/services/BlueprintServices.java

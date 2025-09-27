@@ -1,0 +1,31 @@
+ANALISIS_CONCURRENCIA.txt
+
+Contexto:
+El componente BlueprintsRESTAPI atenderá múltiples peticiones concurrentes (thread-per-request de Spring Boot). La persistencia en memoria puede sufrir condiciones de carrera si varias peticiones leen/modifican la colección interna simultáneamente.
+
+Posibles condiciones de carrera:
+1) Registro de un nuevo plano (POST):
+   - Condición: dos peticiones concurrentes consultan si existe el plano y ambas intentan insertarlo; sin atomicidad se pueden crear duplicados o sobreescribir datos inconsistentes.
+   - Región crítica: lectura + escritura de la colección por autor (operación "exists? then add").
+
+2) Actualización de plano (PUT):
+   - Condición: una petición lee la existencia del plano y otra lo elimina o modifica entre ambos pasos.
+   - Región crítica: operación de búsqueda + reemplazo en el conjunto de planos del autor.
+
+3) Lecturas simultáneas con escrituras:
+   - Condición: una lectura (GET) puede devolver un estado intermedio si se está escribiendo sin sincronización.
+   - Región crítica: iteración sobre las colecciones que se modifican en paralelo.
+
+Estrategia aplicada para suprimir carreras y justificar rendimiento:
+- Uso de `ConcurrentHashMap<String, Set<Blueprint>>` para la estructura principal: operaciones de lectura son altamente concurrentes y no requieren bloqueo global.
+- Para las colecciones por autor uso `ConcurrentHashMap.newKeySet()` (set concurrente) para permitir modificaciones concurrentes seguras.
+- Para operaciones compuestas (consultar + agregar), se utilizan operaciones atómicas provistas por `ConcurrentHashMap`, p.ej. `compute(author, BiFunction)` o `computeIfPresent`. Estas funciones ejecutan el cuerpo de la operación de forma atómica respecto a la clave, evitando tener que sincronizar toda la tabla.
+  - Ejemplo: `compute(author, (k, set) -> { if (set==null) newSet.add(bp) else { check duplicado; set.add(bp); } return set; })`
+- Para actualizaciones críticas implementamos `computeIfPresent` de forma que la búsqueda y reemplazo sean atómicos por autor.
+- No se aplica sincronización a nivel global (p.ej. `synchronized` sobre todo el mapa) para no degradar el rendimiento; la granularidad es por clave `author`.
+- Devolvemos copias defensivas (`new HashSet<>(set)`) en las respuestas para evitar exposición de estructuras internas modificables.
+
+Conclusión:
+- Con `ConcurrentHashMap` + `compute`/`computeIfPresent` se eliminan las condiciones de carrera relevantes sin bloquear lecturas globales, manteniendo buen rendimiento en escenario concurrente.
+- Si se requiriera mayor atomicidad entre diferentes autores o transacciones multi-autor, habría que añadir control transaccional más costoso (no requerido aquí).
+
