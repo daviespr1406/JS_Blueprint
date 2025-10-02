@@ -43,6 +43,10 @@ edu.eci.arsw
 │
 └── blueprintapi
 └── Application # Clase principal de Spring Boot
+└── resources/ 
+	├── static/ 
+	│ └── js/ 
+	└── application.properties
 ```
 
 ---
@@ -222,6 +226,22 @@ Escriba su análisis y la solución aplicada en el archivo ANALISIS_CONCURRENCIA
 	* En el código, y en las respuestas del archivo de texto, se tuvo en cuenta:
 		* La colección usada en InMemoryBlueprintPersistence no es Thread-safe (se debió cambiar a una con esta condición).
 		* El método que agrega un nuevo plano está sujeta a una condición de carrera, pues la consulta y posterior agregación (condicionada a la anterior) no se realizan de forma atómica. Si como solución usa un bloque sincronizado, se evalúa como R. Si como solución se usaron los métodos de agregación condicional atómicos (por ejemplo putIfAbsent()) de la colección 'Thread-Safe' usada, se evalúa como B.
+
+
+## Ejecución del proyecto (JavaScript)
+
+1. Clonar el repositorio o descargar el proyecto.
+2. Navegar a la carpeta raíz del proyecto.
+3. Ejecutar:
+
+```bash
+mvn spring-boot:run
+```
+
+
+4. Abrir un navegador web y navegar a `http://localhost:8080/index.html`.
+
+![](img/3.png)
 
 ## Autor
 * David Santiago Espinosa Rojas
